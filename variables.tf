@@ -4,6 +4,7 @@ variable "domain" {
 
 variable "hostname" {
   description = "Hostname of the certificate"
+  default     = ""
 }
 
 variable "validation_method" {

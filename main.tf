@@ -11,7 +11,7 @@ resource "aws_acm_certificate" "default" {
 }
 
 locals {
-  fqdn                    = "${var.hostname}.${var.domain}"
+  fqdn                    = "${var.hostname != "" ? format("%s.%s", var.hostname, var.domain) : var.domain}"
   san                     = ["${formatlist("%s.%s", var.subject_alternative_names, var.domain)}"]
   skip_route53_validation = "${var.validation_method == "EMAIL" ? true : var.skip_route53_validation}"
 }
