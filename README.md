@@ -92,3 +92,12 @@ A certificate can be imported using its ARN:
 ```
 terraform import aws_acm_certificate.default arn:aws:acm:us-east2-1:123456789012:certificate/7e7a28d2-163f-4b8f-b9cd-822f96c08d6a
 ```
+
+
+Route53 Records can be imported using the ID of the record. The ID is made up as ZONEID_RECORDNAME_CNAME:
+
+```
+terraform import aws_route53_record.default ZE2XGDR9HNNCQ__6f02f830b9c923aca5a897d8ca5ba83b.multi-service.as-test.techservices.illinois.edu_CNAME
+```
+
+
