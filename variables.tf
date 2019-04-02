@@ -26,3 +26,8 @@ variable "skip_route53_validation" {
   description = "Set to true for zones not hosted in Route53"
   default     = false
 }
+
+variable "create_route53_record" {
+  description = "Set to false if Route53 record already exists"
+  default     = true
+}

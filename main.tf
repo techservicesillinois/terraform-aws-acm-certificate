@@ -14,17 +14,18 @@ locals {
   fqdn                    = "${var.hostname != "" ? format("%s.%s", var.hostname, var.domain) : var.domain}"
   san                     = ["${formatlist("%s.%s", var.subject_alternative_names, var.domain)}"]
   skip_route53_validation = "${var.validation_method == "EMAIL" ? true : var.skip_route53_validation}"
+  create_route53_record   = "${var.create_route53_record && !local.skip_route53_validation}"
 }
 
 data "aws_route53_zone" "default" {
-  count = "${local.skip_route53_validation ? 0 : 1}"
+  count = "${local.create_route53_record ? 1 : 0}"
 
   name         = "${var.domain}."
   private_zone = false
 }
 
 resource "aws_route53_record" "default" {
-  count = "${local.skip_route53_validation ? 0 : length(var.subject_alternative_names)+1}"
+  count = "${local.create_route53_record ? length(var.subject_alternative_names)+1 : 0}"
 
   name    = "${lookup(aws_acm_certificate.default.domain_validation_options[count.index], "resource_record_name")}"
   type    = "${lookup(aws_acm_certificate.default.domain_validation_options[count.index], "resource_record_type")}"

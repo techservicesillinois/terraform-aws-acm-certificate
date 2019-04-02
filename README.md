@@ -68,6 +68,8 @@ The following arguments are supported:
 
 * `skip_route53_validation` - Set to true for zones not hosted in Route53
 
+* `create_route53_record` - Set to false if Route53 record already exists
+
 * `tags` - A mapping of tags
 
 Attributes Reference
