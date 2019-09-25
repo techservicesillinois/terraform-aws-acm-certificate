@@ -15,6 +15,7 @@ variable "validation_method" {
 variable "subject_alternative_names" {
   description = "A list of domains that should be SANs in the issued certificate"
   default     = []
+  type        = list(string)
 }
 
 variable "tags" {
