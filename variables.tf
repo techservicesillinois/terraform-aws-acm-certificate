@@ -14,12 +14,13 @@ variable "validation_method" {
 
 variable "subject_alternative_names" {
   description = "A list of domains that should be SANs in the issued certificate"
-  default     = []
   type        = list(string)
+  default     = []
 }
 
 variable "tags" {
   description = "A mapping of tags"
+  type        = map(string)
   default     = {}
 }
 
