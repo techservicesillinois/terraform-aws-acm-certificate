@@ -16,7 +16,7 @@ Route53 zone.
 
 ```hcl
 module "route53" {
-    source = "git::git@github.com:techservicesillinois/terraform-aws-acm-certificate.git//?ref=v1.0.0"
+    source = "git@github.com:techservicesillinois/terraform-aws-acm-certificate"
 
     hostname = "bar"
 
@@ -37,8 +37,8 @@ alternative name (SAN). This example requires manual creation of DNS records for
 
 
 ```hcl
-module "external" {
-    source = "git::git@github.com:techservicesillinois/terraform-aws-acm-certificate.git//?ref=v1.0.0"
+module "not_route53" {
+    source = "git@github.com:techservicesillinois/terraform-aws-acm-certificate"
 
     hostname = "authman"
 
@@ -49,7 +49,7 @@ module "external" {
     domain = "example.org"
     skip_route53_validation = true
 
-    tags { 
+    tags = { 
       environment = "test"
     }
 }
