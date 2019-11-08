@@ -8,7 +8,7 @@ Example Usage
 -----------------
 
 Route53 Hosted Domain
----------------------
+###
 
 This configuration creates an ACM certificate for `bar.example.com` with `foo.example.com` as a subject 
 alternative name (SAN). This example will automatically create DNS validation records in the example.com 
@@ -29,12 +29,10 @@ module "route53" {
 ```
 
 Domain not hosted by Route53
------------------------------
+###
 
 This configuration creates an ACM certificate for `authman.example.org` with `authbot.example.org` as a subject 
-alternative name (SAN). This example requires manual creation of DNS records for certificat validations.
-
-
+alternative name (SAN). This example requires manual creation of DNS records for certificate validations.
 
 ```hcl
 module "not_route53" {
@@ -79,14 +77,9 @@ Attributes Reference
 
 The following attributes are exported:
 
-* `domain_validation_options ` - A list of attributes to feed into other resources to complete certificate validation. 
-
-Credits
---------------------
-
-**Nota bene** the vast majority of the verbiage on this page was
-taken directly from the Terraform manual, and in a few cases from
-Amazon's documentation.
+* `id` - The ARN of the certificate
+* `arn` - The ARN of the certificate
+* `domain_validation_options ` - A list of attributes to used to complete certificate validation
 
 Import
 --------------------
@@ -104,4 +97,9 @@ Route53 Records can be imported using the ID of the record. The ID is made up as
 terraform import aws_route53_record.default ZE2XGDR9HNNCQ__6f02f830b9c923aca5a897d8ca5ba83b.multi-service.as-test.techservices.illinois.edu_CNAME
 ```
 
+Credits
+--------------------
 
+**Nota bene** the vast majority of the verbiage on this page was
+taken directly from the Terraform manual, and in a few cases from
+Amazon's documentation.
