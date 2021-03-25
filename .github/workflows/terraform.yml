@@ -34,7 +34,7 @@ jobs:
       # env:
       #   TOKEN: ${{ secrets.TOKEN }}
         run: |
-          make all
+          make
 
 #     - name: terraform init
 #       id: init
