@@ -19,7 +19,7 @@ variable "subject_alternative_names" {
 }
 
 variable "tags" {
-  description = "A mapping of tags"
+  description = "A mapping of tags to be supplied to resources where supported"
   type        = map(string)
   default     = {}
 }

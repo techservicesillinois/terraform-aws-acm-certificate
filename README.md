@@ -7,8 +7,7 @@ Provides an ACM Certificate resource
 Example Usage
 -----------------
 
-Route53 Hosted Domain
-###
+### Route53 Hosted Domain
 
 This configuration creates an ACM certificate for `bar.example.com` with `foo.example.com` as a subject 
 alternative name (SAN). This example will automatically create DNS validation records in the example.com 
@@ -18,18 +17,17 @@ Route53 zone.
 module "route53" {
     source = "git@github.com:techservicesillinois/terraform-aws-acm-certificate"
 
+    domain   = "example.com"
     hostname = "bar"
 
     subject_alternative_names = [
-      "foo"
+      "foo.some.domain.name"
     ]
 
-    domain = "example.com"
 }
 ```
 
-Domain not hosted by Route53
-###
+### Domain not hosted by Route53
 
 This configuration creates an ACM certificate for `authman.example.org` with `authbot.example.org` as a subject 
 alternative name (SAN). This example requires manual creation of DNS records for certificate validations.
@@ -37,19 +35,15 @@ alternative name (SAN). This example requires manual creation of DNS records for
 ```hcl
 module "not_route53" {
     source = "git@github.com:techservicesillinois/terraform-aws-acm-certificate"
-
-    hostname = "authman"
+ 
+    domain   = "example.org"
+    hostname = "foo"
 
     subject_alternative_names = [ 
-      "authbot"
+      "bar.some.domain.name"
     ]
 
-    domain = "example.org"
-    skip_route53_validation = true
-
-    tags = { 
-      environment = "test"
-    }
+   skip_route53_validation = true
 }
 ```
 
@@ -58,26 +52,25 @@ Argument Reference
 
 The following arguments are supported:
 
-* `domain` - (Required) Domain name of the certificate
+* `domain` - (Required) Domain name of the certificate.
 
-* `hostname` - (Required) Hostname of the certificate
+* `hostname` - (Required) Hostname of the certificate.
 
 * `validation_method` - Which method to use for validation. DNS or EMAIL are valid, NONE can be used for certificates that were imported into ACM and then into Terraform.
 
 * `subject_alternative_names` - A list of domains that should be SANs in the issued certificate
 
-* `skip_route53_validation` - Set to true for zones not hosted in Route53
+* `skip_route53_validation` - Skip Route53 validation. Default is false, which creates Route53 domain validation records to be created. Set to true for zones not hosted in Route53.
 
-* `create_route53_record` - Set to false if Route53 record already exists
+* `create_route53_record` - Create Route53 record. Default is true. Set to false if Route53 record already exists.
 
-* `tags` - A mapping of tags
+* `tags` - A mapping of tags.
 
 Attributes Reference
 --------------------
 
 The following attributes are exported:
 
-* `id` - The ARN of the certificate
 * `arn` - The ARN of the certificate
 * `domain_validation_options ` - A list of attributes to used to complete certificate validation
 

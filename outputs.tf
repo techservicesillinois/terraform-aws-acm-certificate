@@ -1,8 +1,3 @@
-output "id" {
-  description = "The ARN of the certificate"
-  value       = aws_acm_certificate.default.id
-}
-
 output "arn" {
   description = "The ARN of the certificate"
   value       = aws_acm_certificate.default.arn

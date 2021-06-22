@@ -1,3 +1,17 @@
+locals {
+  fqdn                    = var.hostname != "" ? format("%s.%s", var.hostname, var.domain) : var.domain
+  san                     = formatlist("%s.%s", var.subject_alternative_names, var.domain)
+  skip_route53_validation = var.validation_method == "EMAIL" ? true : var.skip_route53_validation
+  create_route53_record   = var.create_route53_record && false == local.skip_route53_validation
+}
+
+data "aws_route53_zone" "default" {
+  for_each = toset((local.create_route53_record) ? [var.domain] : [])
+
+  name         = each.key
+  private_zone = false
+}
+
 resource "aws_acm_certificate" "default" {
   domain_name               = local.fqdn
   subject_alternative_names = local.san
@@ -11,32 +25,27 @@ resource "aws_acm_certificate" "default" {
 }
 
 locals {
-  fqdn                    = var.hostname != "" ? format("%s.%s", var.hostname, var.domain) : var.domain
-  san                     = formatlist("%s.%s", var.subject_alternative_names, var.domain)
-  skip_route53_validation = var.validation_method == "EMAIL" ? true : var.skip_route53_validation
-  create_route53_record   = var.create_route53_record && false == local.skip_route53_validation
-}
-
-data "aws_route53_zone" "default" {
-  count = local.create_route53_record ? 1 : 0
-
-  name         = "${var.domain}."
-  private_zone = false
+  dvo_data = (! local.create_route53_record) ? {} : {
+    for dvo in aws_acm_certificate.default.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
 }
 
 resource "aws_route53_record" "default" {
-  count = local.create_route53_record ? length(var.subject_alternative_names) + 1 : 0
-
-  name    = aws_acm_certificate.default.domain_validation_options[count.index]["resource_record_name"]
-  type    = aws_acm_certificate.default.domain_validation_options[count.index]["resource_record_type"]
-  zone_id = data.aws_route53_zone.default[0].id
-  ttl     = 60
-  records = [aws_acm_certificate.default.domain_validation_options[count.index]["resource_record_value"]]
+  for_each = local.dvo_data
+  name     = each.value.name
+  records  = [each.value.record]
+  ttl      = 60
+  type     = each.value.type
+  zone_id  = data.aws_route53_zone.default[var.domain].zone_id
 }
 
 resource "aws_acm_certificate_validation" "default" {
-  count = local.skip_route53_validation ? 0 : 1
+  for_each = toset((local.skip_route53_validation) ? [] : [aws_acm_certificate.default.domain_name])
 
   certificate_arn         = aws_acm_certificate.default.arn
-  validation_record_fqdns = aws_route53_record.default.*.fqdn
+  validation_record_fqdns = [for record in aws_route53_record.default : record.fqdn]
 }
