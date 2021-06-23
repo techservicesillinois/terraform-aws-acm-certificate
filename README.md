@@ -60,9 +60,9 @@ The following arguments are supported:
 
 * `subject_alternative_names` - A list of domains that should be SANs in the issued certificate
 
-* `skip_route53_validation` - Skip Route53 validation. Default is false, which creates Route53 domain validation records to be created. Set to true for zones not hosted in Route53.
+* `skip_route53_validation` - Set to true to disable Route53 domain validation record creation. This is useful for zones not hosted in Route53 (Default is false).
 
-* `create_route53_record` - Create Route53 record. Default is true. Set to false if Route53 record already exists.
+* `create_route53_record` - Create Route53 record if true. Set to false if Route53 record already exists (Default is true).
 
 * `tags` - A mapping of tags.
 
