@@ -26,10 +26,20 @@ variable "tags" {
 
 variable "skip_route53_validation" {
   description = "Set to true for zones not hosted in Route53"
+  type        = bool
   default     = false
 }
 
 variable "create_route53_record" {
   description = "Set to false if Route53 record already exists"
+  type        = bool
   default     = true
+}
+
+# Debugging.
+
+variable "_debug" {
+  description = "Produce debug output (boolean)"
+  type        = bool
+  default     = false
 }

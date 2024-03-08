@@ -2,7 +2,7 @@ locals {
   fqdn                    = var.hostname != "" ? format("%s.%s", var.hostname, var.domain) : var.domain
   san                     = formatlist("%s.%s", var.subject_alternative_names, var.domain)
   skip_route53_validation = var.validation_method == "EMAIL" ? true : var.skip_route53_validation
-  create_route53_record   = var.create_route53_record && false == local.skip_route53_validation
+  create_route53_record   = var.create_route53_record && (!local.skip_route53_validation)
 }
 
 data "aws_route53_zone" "default" {
@@ -25,7 +25,7 @@ resource "aws_acm_certificate" "default" {
 }
 
 locals {
-  dvo_data = (! local.create_route53_record) ? {} : {
+  dvo_data = (!local.create_route53_record) ? {} : {
     for dvo in aws_acm_certificate.default.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
